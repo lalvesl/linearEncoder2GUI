@@ -1,1 +1,1 @@
-# linearEncoder2GUI
+# Simple Graphical User Interface For Performing Linear Encoders
