@@ -7,6 +7,8 @@
 
 // Access from ARM Running Linux
 
+#include "binder.h"
+
 #define BCM2708_PERI_BASE 0x3F000000
 #define GPIO_BASE (BCM2708_PERI_BASE + 0x200000) /* GPIO controller */
 
@@ -15,6 +17,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <math.h>
 
 #define PAGE_SIZE (4 * 1024)
 #define BLOCK_SIZE (4 * 1024)
@@ -42,83 +45,69 @@ volatile unsigned *gpio;
 #define GPIO_PULL *(gpio + 37)     // Pull up/pull down
 #define GPIO_PULLCLK0 *(gpio + 38) // Pull up/pull down clock
 
-void setup_io();
-
-void printButton(int g)
+// Reverses a string 'str' of length 'len'
+void reverse(char *str, int len)
 {
-  if (GET_GPIO(g)) // !=0 <-> bit is 1 <- port is HIGH=3.3V
-    printf("Button pressed!\n");
-  else // port is LOW=0V
-    printf("Button released!\n");
+  int i = 0, j = len - 1, temp;
+  while (i < j)
+  {
+    temp = str[i];
+    str[i] = str[j];
+    str[j] = temp;
+    i++;
+    j--;
+  }
 }
 
-int main(int argc, char **argv)
+// Converts a given integer x to string str[].
+// d is the number of digits required in the output.
+// If d is more than the number of digits in x,
+// then 0s are added at the beginning.
+int intToStr(int x, char str[], int d)
 {
-  int g, rep;
-
-  // Set up gpi pointer for direct register access
-  setup_io();
-
-  // Switch GPIO 7..11 to output mode
-
-  /************************************************************************\
-   * You are about to change the GPIO settings of your computer.          *
-   * Mess this up and it will stop working!                               *
-   * It might be a good idea to 'sync' before running this program        *
-   * so at least you still have your code changes written to the SD-card! *
-  \************************************************************************/
-
-  // // Set GPIO pins 7-11 to output
-  // for (g=7; g<=11; g++)
-  // {
-  //   INP_GPIO(g); // must use INP_GPIO before we can use OUT_GPIO
-  //   OUT_GPIO(g);
-  // }
-
-  // for (rep=0; rep<10; rep++)
-  // {
-  //    for (g=7; g<=11; g++)
-  //    {
-  //      GPIO_SET = 1<<g;
-  //      sleep(1);
-  //    }
-  //    for (g=7; g<=11; g++)
-  //    {
-  //      GPIO_CLR = 1<<g;
-  //      sleep(1);
-  //    }
-  // }
-
-  // for (int j = 0; j < 28; j++)
-  // {
-  //   printf("GPIO:%d ", j);
-  //   printButton(j);
-  // }
-  int count = 0;
-  int stateA = GET_STATE(2);
-  int stateB = GET_STATE(3);
-  for (;;)
+  int i = 0;
+  while (x)
   {
-
-    if (stateA != GET_STATE(2))
-    {
-      stateA = INV_STATE(stateA);
-      stateB = GET_STATE(3);
-      if (stateA != stateB)
-        count++;
-      else
-        count--;
-    }
-    printf("%d\n", count);
+    str[i++] = (x % 10) + '0';
+    x = x / 10;
   }
 
-  return 0;
+  // If number of digits required is more, then
+  // add 0s at the beginning
+  while (i < d)
+    str[i++] = '0';
 
-} // main
+  reverse(str, i);
+  str[i] = '\0';
+  return i;
+}
 
-//
-// Set up a memory regions to access GPIO
-//
+// Converts a floating-point/double number to a string.
+void ftoa(float n, char *res, int afterpoint)
+{
+  // Extract integer part
+  int ipart = (int)n;
+
+  // Extract floating part
+  float fpart = n - (float)ipart;
+
+  // convert integer part to string
+  int i = intToStr(ipart, res, 0);
+
+  // check for display option after point
+  if (afterpoint != 0)
+  {
+    res[i] = '.'; // add dot
+
+    // Get the value of fraction part upto given no.
+    // of points after dot. The third parameter
+    // is needed to handle cases like 233.007
+    fpart = fpart * pow(10, afterpoint);
+
+    intToStr((int)fpart, res + i + 1, afterpoint);
+  }
+}
+
 void setup_io()
 {
   /* open /dev/mem */
@@ -151,33 +140,61 @@ void setup_io()
 
 } // setup_io
 
+void printButton(int g)
+{
+  if (GET_GPIO(g)) // !=0 <-> bit is 1 <- port is HIGH=3.3V
+    printf("Button pressed!\n");
+  else // port is LOW=0V
+    printf("Button released!\n");
+}
 
+#define A_CHANEL 16
+#define B_CHANEL 26
 
-// GPIO:0 Button pressed!
-// GPIO:1 Button pressed!
-// GPIO:2 Button pressed!
-// GPIO:3 Button released!
-// GPIO:4 Button pressed!
-// GPIO:5 Button pressed!
-// GPIO:6 Button pressed!
-// GPIO:7 Button pressed!
-// GPIO:8 Button pressed!
-// GPIO:9 Button released!
-// GPIO:10 Button released!
-// GPIO:11 Button released!
-// GPIO:12 Button released!
-// GPIO:13 Button released!
-// GPIO:14 Button released!
-// GPIO:15 Button pressed!
-// GPIO:16 Button released!
-// GPIO:17 Button released!
-// GPIO:18 Button released!
-// GPIO:19 Button released!
-// GPIO:20 Button released!
-// GPIO:21 Button released!
-// GPIO:22 Button released!
-// GPIO:23 Button released!
-// GPIO:24 Button released!
-// GPIO:25 Button released!
-// GPIO:26 Button released!
-// GPIO:27 Button released!
+int main(int argc, char **argv)
+{
+  int g, rep;
+
+  setup_io();
+
+  char *location = "./mem/io";
+  FILE *f = fopen(location, "wb");
+
+  if (f == NULL)
+  {
+    printf("//Opening failed...%s\n", location);
+    return -1;
+  }
+
+  int count = 0;
+  int stateA = GET_STATE(A_CHANEL);
+  int stateB = GET_STATE(B_CHANEL);
+  for (int i = 0;; i++)
+  {
+
+    if (stateA != GET_STATE(A_CHANEL))
+    {
+      stateA = INV_STATE(stateA);
+      stateB = GET_STATE(B_CHANEL);
+      if (stateA != stateB)
+        count--;
+      else
+        count++;
+    }
+
+    char data[100];
+    if (i % 10000 == 0)
+    {
+      ftoa(count, data, 3);
+      fseek(f, 0, SEEK_SET);
+      fwrite(data, 100, 1, f);
+      fprintf(f, "%f", (float)((count * 10)) / 1000);
+      // printf("%f\n", (float)((count * 10)) / 1000);
+    }
+  }
+
+  fclose(f);
+  return 0;
+}
+
+// for i in $(ps -aux  | grep "sudo \./io" | awk '{print $2}');do sudo renice -n -15 -p $i;done && ps -al  | grep "sudo \./io"
