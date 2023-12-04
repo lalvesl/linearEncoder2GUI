@@ -3,7 +3,8 @@ libs = -lpthread
 libsLinux = $(libs)
 libsWindows = $(libs)
 appFolder = build
-aplication = build/io
+aplicationName = io
+aplication = build/$(aplicationName)
 aplicationWindows = $(aplication).exe
 mainObj = build/main.o
 mainPrg = src/main.c
@@ -32,7 +33,8 @@ buildFolder:
 
 run:
 	bash -c "if [ -z $$(stat -c "%A" $(aplication) | grep "x$$") ]; then sudo chmod 777 $(aplication);fi"
-	./$(aplication)
+	mv $(aplication) $(aplicationName)
+	./$(aplicationName)
 	
 
 runWindows:
