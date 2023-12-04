@@ -1,17 +1,19 @@
 #include "../binder.h"
 #include "setup_mem.c"
+#include "cpu_afinity.c"
 
 volatile unsigned *gpio;
 
 void io()
 {
-    int g, rep;
+    i32 g, rep;
 
-    setup_io(gpio);
+    setup_io(&gpio);
+    setCPU(2);
 
-    int _position = 0;
-    int stateA = GET_STATE(A_CHANEL);
-    int stateB = GET_STATE(B_CHANEL);
+    i32 _position = 0;
+    i32 stateA = GET_STATE(A_CHANEL);
+    i32 stateB = GET_STATE(B_CHANEL);
     for (int i = 0;; i++)
     {
 
