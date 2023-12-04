@@ -1,10 +1,10 @@
 #include "binder.h"
-#include "io/io_fake.c"
+#include "io/io.c"
 #include "fs_stream/fs_stream.c"
 
 int main()
 {
-    void *funcs[] = {&fs_stream, &io_fake};
+    void *funcs[] = {&fs_stream, &io};
 
     u8 funcsSize = ((sizeof funcs) / (sizeof(void *)));
     pthread_t *threads = (pthread_t *)calloc((sizeof(pthread_t)), funcsSize);
