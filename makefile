@@ -1,9 +1,9 @@
-flagsDev = -g -W -Wall -ansi -pedantic
-libs = # -lpthread
+flagsDev = -g -W -Wall -ansi -pedantic -std=c99
+libs = -lpthread
 libsLinux = $(libs) -lncurses
 libsWindows = $(libs)
 appFolder = build
-aplication = build/ShellArchero
+aplication = build/io
 aplicationWindows = $(aplication).exe
 mainObj = build/main.o
 mainPrg = src/main.c
@@ -31,6 +31,7 @@ buildFolder:
 	@mkdir -p $(appFolder)
 
 run:
+	bash -c "if [ -z $$(stat -c "%A" $(aplication) | grep "x$$") ]; then sudo chmod 777 $(aplication);fi"
 	./$(aplication)
 	
 
@@ -49,4 +50,12 @@ sprites2c: buildFolder
 	gcc dev/sprites/sprites2c.c $(flagsDev) -o $(appFolder)/sprites2c 
 	rm -f src/sprites.h
 	./build/sprites2c > src/sprites.h
+
+devrun:build run
 	
+maketmpfs:
+	mkdir -p "mem"
+	sudo mount -t tmpfs -o size=20m tmpfs ./mem
+
+#forcePriority:
+#for i in $(ps -aux  | grep "sudo \./io" | awk '{print $2}');do sudo renice -n -15 -p $i;done && ps -al  | grep "sudo \./io"
