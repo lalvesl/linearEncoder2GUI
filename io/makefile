@@ -55,7 +55,7 @@ sprites2c: buildFolder
 
 devrun:build run
 	
-maketmpfs:
+tmpfs:
 	mkdir -p "mem"
 	sudo mount -t tmpfs -o size=20m tmpfs ./mem
 	echo "" > ./mem/io
