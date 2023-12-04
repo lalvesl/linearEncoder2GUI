@@ -22,9 +22,9 @@ void io()
             stateA = INV_STATE(stateA);
             stateB = GET_STATE(B_CHANEL);
             if (stateA != stateB)
-                _position--;
-            else
                 _position++;
+            else
+                _position--;
         }
         if (i % 1000000)
         {
