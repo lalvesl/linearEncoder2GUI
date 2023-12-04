@@ -2,9 +2,9 @@
 
 #include <math.h>
 
-void reverse(char *str, int len)
+void reverse(char *str, i32 b_size)
 {
-    int i = 0, j = len - 1, temp;
+    u32 i = 0, j = b_size - 1, temp;
     while (i < j)
     {
         temp = str[i];
@@ -15,15 +15,15 @@ void reverse(char *str, int len)
     }
 }
 
-int intToStr(int x, char str[], int d)
+int intToStr(u32 number, char str[], u32 b_size)
 {
-    int i = 0;
-    while (x)
+    i32 i = 0;
+    while (number)
     {
-        str[i++] = (x % 10) + '0';
-        x = x / 10;
+        str[i++] = (number % 10) + '0';
+        number = number / 10;
     }
-    while (i < d)
+    while (i < (b_size - 1))
         str[i++] = '0';
 
     reverse(str, i);
@@ -46,7 +46,7 @@ void fs_stream()
 
     char data[DATA_BLOCK_SIZE];
 
-    for (int i = 0;; i++)
+    for (u8 i = 0;; i++)
     {
 
         intToStr(position, data, DATA_BLOCK_SIZE);
