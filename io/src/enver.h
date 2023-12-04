@@ -5,7 +5,7 @@
 #define B_CHANEL 26
 #define Z_CHANEL 21
 
-#define PULSES_TO_Z_CHANGE 10000
+#define PULSES_TO_Z_CHANGE 6800
 
 #define PAGE_SIZE (4 * 1024)
 #define BLOCK_SIZE (4 * 1024)
