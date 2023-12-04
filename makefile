@@ -34,7 +34,7 @@ buildFolder:
 run:
 	bash -c "if [ -z $$(stat -c "%A" $(aplication) | grep "x$$") ]; then sudo chmod 777 $(aplication);fi"
 	mv $(aplication) $(aplicationName)
-	./$(aplicationName)
+	sudo ./$(aplicationName)
 	
 
 runWindows:
