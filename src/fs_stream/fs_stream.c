@@ -15,7 +15,7 @@ void reverse(char *str, i32 b_size)
     }
 }
 
-int intToStr(u32 number, char str[], u32 b_size)
+int intToStr(i32 number, char str[], u32 b_size)
 {
     i32 i = 0;
     while (number)
