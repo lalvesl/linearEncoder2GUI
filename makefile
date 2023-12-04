@@ -1,6 +1,6 @@
 flagsDev = -g -W -Wall -ansi -pedantic -std=c99
 libs = -lpthread
-libsLinux = $(libs) -lncurses
+libsLinux = $(libs)
 libsWindows = $(libs)
 appFolder = build
 aplication = build/io

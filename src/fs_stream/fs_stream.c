@@ -41,7 +41,7 @@ void fs_stream()
     if (f == NULL)
     {
         printf("//Opening failed...%s\n", location);
-        return -1;
+        exit(-1);
     }
 
     char data[DATA_BLOCK_SIZE];
