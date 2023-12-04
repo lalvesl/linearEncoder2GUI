@@ -14,6 +14,7 @@ void io()
     i32 _position = 0;
     i32 stateA = GET_STATE(A_CHANEL);
     i32 stateB = GET_STATE(B_CHANEL);
+    i32 stateZ = GET_STATE(Z_CHANEL);
     for (int i = 0;; i++)
     {
 
@@ -25,6 +26,13 @@ void io()
                 _position++;
             else
                 _position--;
+        }
+        if (stateZ != GET_STATE(Z_CHANEL))
+        {
+            if ((_position % PULSES_TO_Z_CHANGE) > (PULSES_TO_Z_CHANGE / 2))
+                _position = (_position / PULSES_TO_Z_CHANGE) + PULSES_TO_Z_CHANGE;
+            else
+                _position = (_position / PULSES_TO_Z_CHANGE) - PULSES_TO_Z_CHANGE;
         }
         if (i % 1000000)
         {
