@@ -35,12 +35,11 @@ int intToStr(i32 number, char str[], u32 b_size)
 
 void fs_stream()
 {
-    char *location = "./mem/io";
-    FILE *f = fopen(location, "wb");
+    FILE *f = fopen(pathIO, "wb");
 
     if (f == NULL)
     {
-        printf("//Opening failed...%s\n", location);
+        printf("//Opening failed...%s\n", pathIO);
         exit(-1);
     }
 
