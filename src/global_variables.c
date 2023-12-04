@@ -1,5 +1,5 @@
 #include "binder.h"
 
-int position = 0;
+i32 position = 0;
 
 pthread_mutex_t stopper;

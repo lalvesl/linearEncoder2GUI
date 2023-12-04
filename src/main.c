@@ -11,7 +11,7 @@ int main()
 
     if (pthread_mutex_init(&stopper, NULL) != 0)
     {
-        printf("Mutex initialization failed\n");
+        printf("Shared memory err\n");
         exit(-1);
     }
 
