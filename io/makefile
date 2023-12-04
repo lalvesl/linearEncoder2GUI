@@ -58,6 +58,7 @@ devrun:build run
 maketmpfs:
 	mkdir -p "mem"
 	sudo mount -t tmpfs -o size=20m tmpfs ./mem
+	echo "" > ./mem/io
 
 #forcePriority:
 #for i in $(ps -aux  | grep "sudo \./io" | awk '{print $2}');do sudo renice -n -15 -p $i;done && ps -al  | grep "sudo \./io"
