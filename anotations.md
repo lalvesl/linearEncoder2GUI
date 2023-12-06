@@ -35,3 +35,4 @@
 ## References
  - [elinux for direct register access](https://elinux.org/RPi_GPIO_Code_Samples#:~:text=different%20C%2DLanguages.-,Direct%20register%20access,-Gert%20van%20Loo);
  - [codeandfile for  beachmarks](https://codeandlife.com/2012/07/03/benchmarking-raspberry-pi-gpio-speed/#:~:text=wave%20is%20generated%3A-,C%3A%20Maximum%20performance,-The%20Raspberry%20Pi);
+ - [shared memory](https://sites.cs.ucsb.edu/~tyang/class/240a17/slides/pthreads.pdf)
