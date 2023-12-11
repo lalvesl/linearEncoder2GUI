@@ -30,9 +30,9 @@ void io()
         if (stateZ != GET_STATE(Z_CHANEL))
         {
             if ((_position % PULSES_TO_Z_CHANGE) > (PULSES_TO_Z_CHANGE / 2))
-                _position = (_position / PULSES_TO_Z_CHANGE) + PULSES_TO_Z_CHANGE;
+                _position = (((int)(_position / PULSES_TO_Z_CHANGE)) * PULSES_TO_Z_CHANGE) + PULSES_TO_Z_CHANGE;
             else
-                _position = (_position / PULSES_TO_Z_CHANGE);
+                _position = (((int)(_position / PULSES_TO_Z_CHANGE)) * PULSES_TO_Z_CHANGE);
         }
         if (i % 1000000)
         {
