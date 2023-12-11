@@ -1,5 +1,5 @@
 #include "binder.h"
-#include "resgister_io/io.c"
+#include "register_io/io.c"
 #include "fs_stream/fs_stream.c"
 
 int main()
