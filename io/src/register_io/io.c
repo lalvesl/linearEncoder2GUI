@@ -20,6 +20,7 @@ void io()
 
         if (stateA != GET_STATE(A_CHANEL))
         {
+            usleep(25);
             stateA = INV_STATE(stateA);
             stateB = GET_STATE(B_CHANEL);
             if (stateA != stateB)
@@ -29,12 +30,13 @@ void io()
         }
         if (stateZ != GET_STATE(Z_CHANEL))
         {
+            usleep(25);
             if ((_position % PULSES_TO_Z_CHANGE) > (PULSES_TO_Z_CHANGE / 2))
                 _position = (((int)(_position / PULSES_TO_Z_CHANGE)) * PULSES_TO_Z_CHANGE) + PULSES_TO_Z_CHANGE;
             else
                 _position = (((int)(_position / PULSES_TO_Z_CHANGE)) * PULSES_TO_Z_CHANGE);
         }
-        if (i % 1000000)
+        if (i % 100000)
         {
             pthread_mutex_lock(&stopper);
             position = _position;
